@@ -13,10 +13,13 @@ import {
   Instagram,
   Menu,
   MessageCircle,
+  Phone,
   Play,
   Quote,
+  Send,
   Sparkles,
   Star,
+  User,
   Users,
   Video,
   X,
@@ -74,7 +77,7 @@ const steps = [
   { number: '04', title: 'Низоми рейтинг', text: 'Пешрафтатонро мебинед ва барои қадами нав ҳавасманд мемонед.', icon: BarChart3 },
 ];
 
-const reviews = [
+const initialReviews = [
   { name: 'Манижа', role: 'Шогирди курс', quote: 'Ман баъд аз моҳи аввал тавонистам бо ҳамкоронам бо англисӣ озодтар суҳбат кунам.', initials: 'М', color: 'from-blue-500 to-cyan-400' },
   { name: 'Фаррух', role: 'Аз сатҳи сифр', quote: 'Дарсҳо хеле фаҳмоанд. Муҳимаш ин аст, ки ҳар ҳафта натиҷаи худро ҳис мекунӣ.', initials: 'Ф', color: 'from-sky-500 to-blue-600' },
   { name: 'Ситора', role: 'Шогирди ODDI', quote: 'Муоширати зинда тарси маро аз гап задан бартараф кард. Ташаккур ба Назар!', initials: 'С', color: 'from-cyan-400 to-blue-500' },
@@ -91,6 +94,49 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [videoOpen, setVideoOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
+  const [reviews, setReviews] = useState(initialReviews);
+  const [isOpen, setIsOpen] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [comment, setComment] = useState('');
+  const [error, setError] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+
+  const resetForm = () => {
+    setRating(0);
+    setHoverRating(0);
+    setName('');
+    setPhone('');
+    setComment('');
+    setError('');
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+    setSubmitted(false);
+    resetForm();
+  };
+
+  const handleSubmit = () => {
+    if (!name.trim()) return setError('Лутфан ному фамилияи худро нависед.');
+    if (!phone.trim()) return setError('Лутфан рақами телефони худро нависед.');
+    if (rating === 0) return setError('Лутфан бо ситора баҳо гузоред.');
+    if (!comment.trim()) return setError('Лутфан каментии худро нависед.');
+
+    const initials = name.trim().split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+    const palette = ['from-blue-500 to-cyan-400', 'from-sky-500 to-blue-600', 'from-cyan-400 to-blue-500'];
+
+    setReviews((prev) => [
+      { name: name.trim(), role: `Баҳо: ${rating}/5`, quote: comment.trim(), initials, color: palette[prev.length % palette.length] },
+      ...prev,
+    ]);
+    setError('');
+    setSubmitted(true);
+  };
+
+  const avgRating = (reviews.reduce((s, r) => s + (r.role.includes('Баҳо') ? Number(r.role.split(': ')[1].split('/')[0]) : 5), 0) / reviews.length).toFixed(1);
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#080d17] text-white selection:bg-blue-500/30">
@@ -144,8 +190,165 @@ export default function Home() {
 
       <section id="mentor" className="mx-auto max-w-7xl px-5 py-24 lg:px-8 lg:py-32"><div className="grid items-center gap-12 lg:grid-cols-[.86fr_1.14fr] lg:gap-20"><div className="relative mx-auto w-full max-w-md"><div className="absolute -inset-4 rounded-[30px] bg-blue-500/15 blur-2xl" /><div className="relative overflow-hidden rounded-[25px] border border-white/10 bg-[#0d1523] p-3"><Image src="/images/image copy.png" alt="Профили Nazarov.eng" width={1152} height={2048} className="h-[500px] w-full rounded-[18px] object-cover object-top opacity-90" /></div><div className="absolute -bottom-5 -right-5 rounded-2xl border border-blue-300/20 bg-[#111d2e] px-5 py-4"><p className="text-2xl font-bold text-blue-300">54K<span className="text-sm text-slate-500">+</span></p><p className="text-[10px] text-slate-400">пайравон дар Instagram</p></div></div><div><p className="eyebrow">§ 04 — ДАР БОРАИ МЕНТОР</p><h2 className="section-title mt-4">Омӯзгоре, ки<br /><span className="text-blue-400">шуморо мефаҳмад.</span></h2><p className="mt-7 max-w-xl text-[15px] leading-7 text-slate-400">Назар Назаров — методист, омӯзгори англисӣ ва блогер. Солҳо таҷрибаи омӯзишро ба як платформаи онлайн табдил дод, то ҳар як тоҷик тавонад англисиро бо роҳи дуруст омӯзад.</p><div className="mt-8 grid grid-cols-2 gap-4 border-y border-white/[0.08] py-6 sm:grid-cols-3"><div><p className="text-xl font-bold">10+</p><p className="mt-1 text-xs text-slate-500">сол таҷриба</p></div><div><p className="text-xl font-bold">2.4K</p><p className="mt-1 text-xs text-slate-500">шогирди фаъол</p></div><div><p className="text-xl font-bold">4.9/5</p><p className="mt-1 text-xs text-slate-500">баҳогузорӣ</p></div></div><a href="https://www.instagram.com/nazarov.eng" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-blue-300 transition hover:text-white"><Instagram size={17} /> @nazarov.eng <ArrowRight size={15} /></a></div></div></section>
 
-      <section id="students" className="border-y border-white/[0.06] bg-[#0a111d] py-24 lg:py-32"><div className="mx-auto max-w-7xl px-5 lg:px-8"><div className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end"><div><p className="eyebrow">§ 05 — ФИДБАК АЗ ШОГИРДОН</p><h2 className="section-title mt-4">Натиҷаи онҳо,<br /><span className="text-blue-400">илҳоми шумо.</span></h2></div><div className="flex items-center gap-2 text-sm text-slate-400"><div className="flex text-blue-400">{Array.from({ length: 5 }).map((_, i) => <Star key={i} size={14} fill="currentColor" />)}</div> 4.9 аз 5</div></div><div className="grid gap-4 lg:grid-cols-3">{reviews.map(({ name, role, quote, initials, color }) => <article key={name} className="rounded-2xl border border-white/[0.08] bg-[#0d1523] p-6"><div className="flex items-center justify-between"><div className="flex items-center gap-3"><span className={`grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br ${color} text-sm font-bold`}>{initials}</span><div><p className="text-sm font-semibold">{name}</p><p className="text-xs text-slate-500">{role}</p></div></div><Quote size={20} className="text-blue-400/50" /></div><p className="mt-6 text-[15px] leading-7 text-slate-300">“{quote}”</p><div className="mt-6 flex items-center gap-1 text-blue-400">{Array.from({ length: 5 }).map((_, i) => <Star key={i} size={12} fill="currentColor" />)}</div></article>)}</div></div></section>
+      <section id="students" className="border-y border-white/[0.06] bg-[#0a111d] py-24 lg:py-32">
+        <div className="mx-auto max-w-7xl px-5 lg:px-8">
+          <div className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+            <div>
+              <p className="eyebrow">§ 05 — ФИДБАК АЗ ШОГИРДОН</p>
+              <h2 className="section-title mt-4">
+                Натиҷаи онҳо,<br />
+                <span className="text-blue-400">илҳоми шумо.</span>
+              </h2>
+            </div>
+            <div className="flex flex-col items-start gap-3 md:items-end">
+              <div className="flex items-center gap-2 text-sm text-slate-400">
+                <div className="flex text-blue-400">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} size={14} fill="currentColor" />
+                  ))}
+                </div>
+                {avgRating} аз 5
+              </div>
+              <button
+                onClick={() => setIsOpen(true)}
+                className="rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 px-5 py-2.5 text-sm font-semibold text-[#0a111d] transition hover:opacity-90"
+              >
+                Гузоштани шарҳ
+              </button>
+            </div>
+          </div>
 
+          <div className="grid gap-4 lg:grid-cols-3">
+            {reviews.map(({ name, role, quote, initials, color }, idx) => (
+              <article
+                key={`${name}-${idx}`}
+                className="group rounded-2xl border border-white/[0.08] bg-[#0d1523] p-6 transition hover:border-blue-400/30 hover:bg-[#0e1626]"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className={`grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br ${color} text-sm font-bold text-[#0a111d]`}>
+                      {initials}
+                    </span>
+                    <div>
+                      <p className="text-sm font-semibold">{name}</p>
+                      <p className="text-xs text-slate-500">{role}</p>
+                    </div>
+                  </div>
+                  <Quote size={20} className="text-blue-400/40" />
+                </div>
+                <p className="mt-6 text-[15px] leading-7 text-slate-300">"{quote}"</p>
+                <div className="mt-6 flex items-center gap-1 text-blue-400">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} size={12} fill="currentColor" />
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        {isOpen && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm"
+            onClick={closeModal}
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-md rounded-2xl border border-white/[0.08] bg-[#0d1523] p-6 shadow-2xl"
+            >
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-white">
+                  {submitted ? 'Ташаккур!' : 'Шарҳи худро нависед'}
+                </h3>
+                <button onClick={closeModal} className="rounded-full p-1 text-slate-400 hover:bg-white/5 hover:text-white">
+                  <X size={20} />
+                </button>
+              </div>
+
+              {submitted ? (
+                <div className="mt-6 flex flex-col items-center gap-3 py-4 text-center">
+                  <div className="flex text-blue-400">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star key={i} size={20} fill="currentColor" />
+                    ))}
+                  </div>
+                  <p className="text-sm text-slate-300">Шарҳи шумо бомуваффақият сабт шуд.</p>
+                  <button
+                    onClick={closeModal}
+                    className="mt-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 px-5 py-2 text-sm font-semibold text-[#0a111d]"
+                  >
+                    Пӯшидан
+                  </button>
+                </div>
+              ) : (
+                <div className="mt-5 space-y-4">
+                  <div className="flex justify-center gap-1 py-1">
+                    {Array.from({ length: 5 }).map((_, i) => {
+                      const value = i + 1;
+                      return (
+                        <button
+                          key={value}
+                          type="button"
+                          onMouseEnter={() => setHoverRating(value)}
+                          onMouseLeave={() => setHoverRating(0)}
+                          onClick={() => setRating(value)}
+                          className="p-1 transition"
+                        >
+                          <Star
+                            size={30}
+                            fill={(hoverRating || rating) >= value ? 'currentColor' : 'none'}
+                            className={(hoverRating || rating) >= value ? 'text-blue-400' : 'text-slate-600'}
+                          />
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <div className="relative">
+                    <User size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Ному фамилия"
+                      className="w-full rounded-xl border border-white/[0.08] bg-[#0a111d] py-2.5 pl-10 pr-3 text-sm text-white placeholder:text-slate-500 outline-none focus:border-blue-400/50"
+                    />
+                  </div>
+
+                  <div className="relative">
+                    <Phone size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+992 __ ___ __ __"
+                      className="w-full rounded-xl border border-white/[0.08] bg-[#0a111d] py-2.5 pl-10 pr-3 text-sm text-white placeholder:text-slate-500 outline-none focus:border-blue-400/50"
+                    />
+                  </div>
+
+                  <textarea
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    placeholder="Фикри худро дар бораи курс нависед..."
+                    rows={4}
+                    className="w-full resize-none rounded-xl border border-white/[0.08] bg-[#0a111d] p-3 text-sm text-white placeholder:text-slate-500 outline-none focus:border-blue-400/50"
+                  />
+
+                  {error && <p className="text-xs text-red-400">{error}</p>}
+
+                  <button
+                    onClick={handleSubmit}
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-400 py-3 text-sm font-semibold text-[#0a111d] transition hover:opacity-90"
+                  >
+                    <Send size={16} />
+                    Фиристодани шарҳ
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </section>
       <section id="faq" className="mx-auto max-w-3xl px-5 py-24 lg:py-32"><div className="text-center"><p className="eyebrow">§ 06 — САВОЛҲОИ ШУМО</p><h2 className="section-title mt-4">Ҳама чиз<br /><span className="text-blue-400">равшан аст.</span></h2></div><div className="mt-12 space-y-3">{faqs.map(([question, answer], index) => <div key={question} className="overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0d1523]"><button onClick={() => setActiveFaq(activeFaq === index ? null : index)} className="flex w-full items-center justify-between gap-5 p-5 text-left text-sm font-semibold transition hover:text-blue-300 md:p-6"><span>{question}</span><ChevronDown size={18} className={`shrink-0 text-blue-400 transition ${activeFaq === index ? 'rotate-180' : ''}`} /></button>{activeFaq === index && <div className="px-5 pb-6 text-sm leading-6 text-slate-500 md:px-6">{answer}</div>}</div>)}</div></section>
 
       <footer id="contact" className="border-t border-white/[0.07] bg-[#060a12]"><div className="mx-auto max-w-7xl px-5 py-20 lg:px-8"><div className="grid gap-12 lg:grid-cols-[1.2fr_.8fr] lg:items-end"><div><p className="eyebrow">§ 07 — АЛОҚА</p><h2 className="mt-5 max-w-xl text-4xl font-bold leading-tight tracking-tight md:text-5xl">Савол доред?<br /><span className="blue-text-glow">Нависед.</span></h2><p className="mt-6 max-w-md text-sm leading-6 text-slate-500">Барои сабти ном ё гирифтани маълумоти бештар ба мо дар Telegram нависед. Мо дар ҷавоби шумо ҳастем.</p></div><div className="lg:justify-self-end"><a href="https://t.me/nazaroveng" className="group flex items-center gap-4 rounded-2xl border border-blue-400/20 bg-blue-500/[0.08] p-5 transition hover:border-blue-400/50 hover:bg-blue-500/[0.14]"><span className="grid h-12 w-12 place-items-center rounded-xl bg-blue-500 text-white"><MessageCircle size={22} /></span><span><span className="block text-xs text-slate-500">Ба мо нависед</span><span className="mt-1 block text-lg font-bold text-blue-300">@oddienglish <ArrowRight size={16} className="ml-1 inline transition group-hover:translate-x-1" /></span></span></a><p className="mt-4 text-right text-xs text-slate-600">Нарх: 499 сомонӣ барои 6 моҳ</p></div></div><div className="mt-20 flex flex-col justify-between gap-5 border-t border-white/[0.07] pt-7 text-xs text-slate-600 md:flex-row"><span>© 2024 ODDI ENGLISH. Ҳамаи ҳуқуқҳо ҳифз шудаанд.</span><span>Омӯзишро оддӣ кун.</span></div></div></footer>
