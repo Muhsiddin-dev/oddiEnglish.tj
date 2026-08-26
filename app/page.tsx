@@ -1,18 +1,17 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import Navbar from '@/components/site-navbar';
-import Hero from '@/components/site-hero';
-import Curriculum from '@/components/site-curriculum';
-import HowItWorks from '@/components/site-how-it-works';
-import AboutMentor from '@/components/site-about-mentor';
-import Reviews from '@/components/site-reviews';
-import FAQ from '@/components/site-faq';
-import Footer from '@/components/site-footer';
-import AdminPanel from '@/components/admin-panel';
-import { useScrollReveal } from '@/hooks/use-scroll-reveal';
-import { fetchContent } from '@/lib/data';
-import type { SiteContent } from '@/lib/types';
+import AboutMentor from "@/components/AboutMentor";
+import Curriculum from "@/components/Curriculum";
+import FAQ from "@/components/FAQ";
+import Footer from "@/components/Footer";
+import Hero from "@/components/Hero";
+import HowItWorks from "@/components/HowItWorks";
+import Navbar from "@/components/Navbar";
+import Reviews from "@/components/Reviews";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { fetchContent, fetchApprovedReviews } from "@/lib/data";
+import { SiteContent, Review } from "@/lib/types";
+import { useState, useCallback, useEffect } from 'react';
 
 const defaultContent: SiteContent = {
   faqs: [],
@@ -23,6 +22,7 @@ const defaultContent: SiteContent = {
 
 export default function Home() {
   const [content, setContent] = useState<SiteContent>(defaultContent);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [adminOpen, setAdminOpen] = useState(false);
   const [contentVersion, setContentVersion] = useState(0);
 
@@ -30,12 +30,18 @@ export default function Home() {
 
   const loadContent = useCallback(async () => {
     const data = await fetchContent();
-    setContent(data);
+    if (data) setContent(data);
+  }, []);
+
+  const loadReviews = useCallback(async () => {
+    const data = await fetchApprovedReviews();
+    if (data) setReviews(data);
   }, []);
 
   useEffect(() => {
     loadContent();
-  }, [loadContent, contentVersion]);
+    loadReviews();
+  }, [loadContent, loadReviews, contentVersion]);
 
   const handleContentChanged = () => setContentVersion((v) => v + 1);
   const handleReviewsChanged = () => setContentVersion((v) => v + 1);
@@ -57,16 +63,11 @@ export default function Home() {
       <Curriculum items={content.curriculum} />
       <HowItWorks steps={content.howItWorks} />
       <AboutMentor stats={content.mentorStats} />
-      <Reviews />
+      
+      <Reviews reviews={reviews} onReviewSubmitted={handleReviewsChanged} />
+      
       <FAQ faqs={content.faqs} />
-      <Footer onAdminClick={() => setAdminOpen(true)} />
-
-      <AdminPanel
-        open={adminOpen}
-        onClose={() => setAdminOpen(false)}
-        onContentChanged={handleContentChanged}
-        onReviewsChanged={handleReviewsChanged}
-      />
+      <Footer />
     </main>
   );
 }

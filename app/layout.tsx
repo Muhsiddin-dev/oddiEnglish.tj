@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { ThemeProvider } from '@/context/ThemeContext'; 
 
 const inter = Inter({ subsets: ['latin', 'cyrillic'] });
 
@@ -10,5 +11,13 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="tg"><body className={inter.className}>{children}</body></html>;
+  return (
+    <html lang="tg">
+      <body className={inter.className}>
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
+      </body>
+    </html>
+  );
 }
