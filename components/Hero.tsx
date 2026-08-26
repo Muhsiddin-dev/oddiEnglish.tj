@@ -5,6 +5,7 @@ import { useRef } from 'react';
 
 export default function Hero() {
   const tilt = useTilt(6)
+  const ref = useRef<HTMLDivElement | null>(null);
 
   return (
     <section id="hero" className="relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden">
@@ -73,7 +74,7 @@ export default function Hero() {
 
           <div className="reveal reveal-delay-2 perspective flex justify-center lg:justify-end">
             <div
-              ref={tilt.ref}
+              ref={tilt.ref as any}
               onMouseMove={tilt.onMouseMove}
               onMouseLeave={tilt.onMouseLeave}
               style={tilt.style}

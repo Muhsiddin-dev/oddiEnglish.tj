@@ -5,7 +5,7 @@ import {
   Plus, Save, Edit3, Trash2, ListChecks, Loader2, AlertCircle,
   Users, Check, Sparkles, BarChart3,
 } from 'lucide-react'
-import type { SiteContent, HowItWorksStep } from '@/lib/types'
+import type { HowItWorksStep } from '@/lib/types'
 import { upsertHowItWorks, deleteHowItWorks } from '@/lib/data'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import {
@@ -25,8 +25,8 @@ const ICON_OPTIONS = [
 
 const getIconComp = (icon?: string) => ICON_OPTIONS.find(o => o.key === icon)?.Icon || ListChecks
 
-export default function StepsManager({ content, onContentChanged }: { content: SiteContent; onContentChanged: () => void }) {
-  const [items, setItems] = useState<HowItWorksStep[]>(content?.howItWorks || [])
+export default function StepsManager() {
+  const [items, setItems] = useState<HowItWorksStep[]>([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [editing, setEditing] = useState<HowItWorksStep | null>(null)
@@ -81,16 +81,10 @@ export default function StepsManager({ content, onContentChanged }: { content: S
         return
       }
 
-      const updated = items.some(i => i.id === editing.id)
-        ? items.map(i => i.id === editing.id ? editing : i)
-        : [...items, editing]
-
-      setItems(updated.sort((a, b) => (a.step_number ?? 0) - (b.step_number ?? 0)))
       setEditing(null)
-      onContentChanged()
+      await fetchSteps() // Гирифтани маълумоти навтарин аз база
     } catch (error) {
       console.error("Хатогӣ ҳангоми захиракунӣ:", error)
-      alert("Хатогӣ рӯй дод.")
     } finally {
       setSaving(false)
     }
@@ -104,16 +98,13 @@ export default function StepsManager({ content, onContentChanged }: { content: S
       const result = await deleteHowItWorks(id)
 
       if (result && result.error) {
-        alert("Хатогӣ дар несткунӣ: " + result.error)
         setDeletingId(null)
         return
       }
 
-      setItems(items.filter(i => i.id !== id))
-      onContentChanged()
+      await fetchSteps() 
     } catch (error) {
       console.error("Хатогӣ ҳангоми несткунӣ:", error)
-      alert("Нест карда нашуд.")
     } finally {
       setDeletingId(null)
     }
@@ -219,7 +210,7 @@ export default function StepsManager({ content, onContentChanged }: { content: S
       )}
 
       <Dialog open={!!editing} onOpenChange={(open) => !open && setEditing(null)}>
-        <DialogContent className="sm:max-w-[450px]">
+        <DialogContent className="sm:max-w-[450px] border-0">
           <DialogHeader>
             <DialogTitle>
               {isNewItem ? 'Қадами нав' : 'Таҳрири қадам'}

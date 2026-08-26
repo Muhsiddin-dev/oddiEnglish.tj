@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect, useCallback } from 'react'
-import { Plus, Save, Edit3, Trash2, HelpCircle, Loader2 } from 'lucide-react'
+import { Plus, Edit3, Trash2, HelpCircle, Loader2 } from 'lucide-react'
 import type { FaqItem } from '@/lib/types'
 import { supabase } from '@/lib/supabase'
 import {
@@ -10,16 +10,16 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
 
-export default function FaqAdmin({ onContentChanged }: { onContentChanged?: () => void }) {
+export default function FaqsPage() {
   const [items, setItems] = useState<FaqItem[]>([])
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState<FaqItem | null>(null)
   const [saving, setSaving] = useState(false)
 
-  // Функсияи бор кардани маълумот аз Supabase (монанди ReviewsPage)
+  // Бор кардани маълумот аз Supabase
   const loadFaqs = useCallback(async () => {
+    if (!supabase) return;
     setLoading(true)
     const { data, error } = await supabase
       .from('faqs')
@@ -46,6 +46,7 @@ export default function FaqAdmin({ onContentChanged }: { onContentChanged?: () =
   })
 
   const handleSave = async () => {
+    if (!supabase) return;
     if (!editing || !editing.question.trim()) return
     setSaving(true)
 
@@ -61,17 +62,12 @@ export default function FaqAdmin({ onContentChanged }: { onContentChanged?: () =
 
       if (error) {
         console.error('Хатогӣ ҳангоми захиракунӣ:', error.message)
-        alert('Хатогӣ: ' + error.message)
         setSaving(false)
         return
       }
 
       setEditing(null)
       loadFaqs() // Бор кардани маълумоти нав аз база
-
-      if (typeof onContentChanged === 'function') {
-        onContentChanged()
-      }
     } catch (err) {
       console.error('Хатогии ғайричашмдошт:', err)
     } finally {
@@ -80,6 +76,7 @@ export default function FaqAdmin({ onContentChanged }: { onContentChanged?: () =
   }
 
   const handleDelete = async (id: string) => {
+    if (!supabase) return;
     if (!confirm('Савол нест карда шавад?')) return
 
     try {
@@ -90,15 +87,10 @@ export default function FaqAdmin({ onContentChanged }: { onContentChanged?: () =
 
       if (error) {
         console.error('Хатогӣ ҳангоми несткунӣ:', error.message)
-        alert('Хатогӣ: ' + error.message)
         return
       }
 
-      loadFaqs() // Навсозии рӯйхат аз база
-
-      if (typeof onContentChanged === 'function') {
-        onContentChanged()
-      }
+      loadFaqs() 
     } catch (err) {
       console.error('Хатогии ғайричашмдошт:', err)
     }
@@ -115,52 +107,53 @@ export default function FaqAdmin({ onContentChanged }: { onContentChanged?: () =
 
       {editing && (
         <Dialog open={!!editing} onOpenChange={(open) => !open && setEditing(null)}>
-  <DialogContent className="sm:max-w-[500px] bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 rounded-2xl shadow-2xl">
-    <DialogHeader>
-      <DialogTitle className="text-xl font-bold">
-        {editing?.id ? 'Таҳрири савол' : 'Саволи нав'}
-      </DialogTitle>
-    </DialogHeader>
+          <DialogContent className="sm:max-w-[500px] border-0">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold">
+                {editing?.id && items.some(i => i.id === editing.id) ? 'Таҳрири савол' : 'Саволи нав'}
+              </DialogTitle>
+            </DialogHeader>
 
-    <div className="space-y-4 py-4">
-      <div>
-        <label className="text-xs font-semibold text-zinc-500 mb-1 block">Савол</label>
-        <input 
-          type="text"
-          value={editing?.question || ''}
-          onChange={(e) => setEditing({ ...editing, question: e.target.value })}
-          className="w-full px-3 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-transparent text-sm outline-none focus:border-blue-500"
-          placeholder="Саволро нависед..."
-        />
-      </div>
-      <div>
-        <label className="text-xs font-semibold text-zinc-500 mb-1 block">Ҷавоб</label>
-        <textarea 
-          rows={4}
-          value={editing?.answer || ''}
-          onChange={(e) => setEditing({ ...editing, answer: e.target.value })}
-          className="w-full px-3 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-transparent text-sm outline-none focus:border-blue-500 resize-none"
-          placeholder="Ҷавобро нависед..."
-        />
-      </div>
-    </div>
+            <div className="space-y-4 py-4">
+              <div>
+                <label className="text-xs font-semibold text-zinc-500 mb-1 block">Савол</label>
+                <input 
+                  type="text"
+                  value={editing?.question || ''}
+                  onChange={(e) => setEditing({ ...editing, question: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-transparent text-sm outline-none focus:border-blue-500"
+                  placeholder="Саволро нависед..."
+                />
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-zinc-500 mb-1 block">Ҷавоб</label>
+                <textarea 
+                  rows={4}
+                  value={editing?.answer || ''}
+                  onChange={(e) => setEditing({ ...editing, answer: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-transparent text-sm outline-none focus:border-blue-500 resize-none"
+                  placeholder="Ҷавобро нависед..."
+                />
+              </div>
+            </div>
 
-    <DialogFooter className="flex gap-2 justify-end">
-      <button 
-        onClick={() => setEditing(null)}
-        className="px-4 py-2 rounded-lg text-xs font-medium border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition"
-      >
-        Бекор кардан
-      </button>
-      <button 
-        onClick={handleSave}
-        className="px-4 py-2 rounded-lg text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition"
-      >
-        Нигоҳ доштан
-      </button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
+            <DialogFooter className="flex gap-2 justify-end">
+              <button 
+                onClick={() => setEditing(null)}
+                className="px-4 py-2 rounded-lg text-xs font-medium border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition"
+              >
+                Бекор кардан
+              </button>
+              <button 
+                onClick={handleSave}
+                disabled={saving}
+                className="px-4 py-2 rounded-lg text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition disabled:opacity-50 flex items-center gap-2"
+              >
+                {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Нигоҳ доштан'}
+              </button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       )}
 
       {loading ? (
@@ -188,7 +181,6 @@ export default function FaqAdmin({ onContentChanged }: { onContentChanged?: () =
           ))}
         </div>
       )}
-
     </div>
   )
 }

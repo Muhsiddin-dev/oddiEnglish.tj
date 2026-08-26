@@ -80,7 +80,7 @@ function ReviewCard({ review }: { review: Review }) {
         "{review.comment}"
       </p>
 
-      {review.media_urls && review.media_urls.length > 0 && (
+      {/* {review.media_urls && review.media_urls.length > 0 && (
         <div className="mt-4 flex gap-2 flex-wrap">
           {review.media_urls.map((url, i) =>
             review.media_types[i] === 'video' ? (
@@ -100,7 +100,7 @@ function ReviewCard({ review }: { review: Review }) {
             ),
           )}
         </div>
-      )}
+      )} */}
 
       <p className="mt-4 pt-4 border-t text-xs" style={{ borderColor: 'var(--border-color)', color: 'var(--text-muted)' }}>
         {new Date(review.created_at).toLocaleDateString('tg-TJ', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -235,8 +235,7 @@ function ReviewForm({ onClose, onSubmitted }: { onClose: () => void; onSubmitted
         />
       </div>
 
-      {/* File upload */}
-      <div>
+      {/* <div>
         <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
           Сурат ё видео (ихтиёрӣ — то 5 файл)
         </label>
@@ -263,7 +262,6 @@ function ReviewForm({ onClose, onSubmitted }: { onClose: () => void; onSubmitted
           </span>
         </button>
 
-        {/* Previews */}
         {previews.length > 0 && (
           <div className="mt-3 flex gap-2 flex-wrap">
             {previews.map((preview, i) => (
@@ -286,7 +284,7 @@ function ReviewForm({ onClose, onSubmitted }: { onClose: () => void; onSubmitted
             ))}
           </div>
         )}
-      </div>
+      </div> */}
 
       {error && (
         <p className="text-sm text-red-500 bg-red-500/10 rounded-lg px-4 py-2">{error}</p>

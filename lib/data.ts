@@ -177,7 +177,12 @@ export async function upsertCurriculum(
   item: CurriculumItem,
 ): Promise<{ success: boolean; error?: string }> {
   if (!isSupabaseConfigured || !supabase) return { success: false, error: 'Not configured' }
-  const { error } = await supabase.from('curriculum').upsert(item, { onConflict: 'id' })
+  
+  const { error } = await supabase
+    .from('curriculum')
+    .upsert(item, { onConflict: 'id' })
+    .select() 
+
   if (error) return { success: false, error: error.message }
   return { success: true }
 }
@@ -186,7 +191,12 @@ export async function deleteCurriculum(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
   if (!isSupabaseConfigured || !supabase) return { success: false, error: 'Not configured' }
-  const { error } = await supabase.from('curriculum').delete().eq('id', id)
+
+  const { error } = await supabase
+    .from('curriculum')
+    .delete()
+    .eq('id', id)
+
   if (error) return { success: false, error: error.message }
   return { success: true }
 }

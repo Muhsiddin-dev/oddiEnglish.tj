@@ -5,11 +5,8 @@ import { supabase } from '@/lib/supabase'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
-interface AdminLoginProps {
-  onSuccess?: () => void
-}
 
-export default function AdminLogin({ onSuccess }: AdminLoginProps) {
+export default function AdminLogin() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -44,11 +41,7 @@ export default function AdminLogin({ onSuccess }: AdminLoginProps) {
         access_token: data.session.access_token
       }))
 
-      if (typeof onSuccess === 'function') {
-        onSuccess()
-      } else {
-        router.push("/admin/dashboard")
-      }
+        router.push("/admin/reviews")
     }
     setLoading(false)
   }

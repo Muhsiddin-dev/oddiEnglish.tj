@@ -40,8 +40,7 @@ export interface CurriculumItem {
   title: string
   description: string
   level: string
-  order_index: number
-  week_number: number
+  order_index?: number
 }
 
 export interface SiteContent {
