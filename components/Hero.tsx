@@ -2,6 +2,7 @@
 import { ArrowRight, Play, Sparkles, Star, Users, Award, TrendingUp } from 'lucide-react'
 import { useTilt } from '../hooks/useTilt'
 import { useRef } from 'react';
+import Image from 'next/image';
 
 export default function Hero() {
   const tilt = useTilt(6)
@@ -80,11 +81,10 @@ export default function Hero() {
               style={tilt.style}
               className="relative w-full max-w-md"
             >
-              {/* Main card */}
               <div className="glass-card rounded-3xl p-8 preserve-3d">
                 <div className="flex items-center gap-3 mb-6" style={{ transform: 'translateZ(40px)' }}>
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center shadow-lg shadow-brand-500/40">
-                    <span className="text-white font-display font-bold text-xl">N</span>
+                    <Image src={"/nazaroveng.png"} className='rounded-xl object-contain w-full h-auto' width={500} height={400} alt="Oddi English" />
                   </div>
                   <div>
                     <p className="font-display font-bold text-lg">Назар Назаров</p>

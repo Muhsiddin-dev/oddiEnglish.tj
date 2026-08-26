@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from 'react'
-import { Menu, X, Moon, Sun, GraduationCap } from 'lucide-react'
+import { Menu, X, Moon, Sun, GraduationCap, Globe, ChevronDown } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
 import Image from 'next/image'
 
@@ -13,10 +13,24 @@ const navLinks = [
   { label: 'САВОЛҲО', href: '#faq' },
 ]
 
+const LANGUAGES = [
+  { code: 'tj', label: 'Тоҷикӣ', flag: '🇹🇯' },
+  { code: 'ru', label: 'Русский', flag: '🇷🇺' },
+  { code: 'en', label: 'English', flag: '🇬🇧' },
+]
+
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [currentLang, setCurrentLang] = useState(LANGUAGES[0])
+  const [isLangOpen, setIsLangOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  const handleLangChange = (lang: typeof LANGUAGES[0]) => {
+    setCurrentLang(lang)
+    setIsLangOpen(false)
+  }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30)
@@ -27,18 +41,16 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'glass-nav py-2' : 'py-4 bg-transparent'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass-nav py-2' : 'py-4 bg-transparent'
+        }`}
     >
       <div className="max-w-7xl mx-auto container-px flex items-center justify-between">
-        {/* Logo */}
         <a href="#hero" className="flex items-center gap-2.5 group">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center shadow-xs shadow-brand-500/30 group-hover:scale-110 transition-transform">
-          <Image src={"/Logo.png"} className='rounded-xl object-contain w-full h-auto' width={500} height={400}  alt="Oddi English" />
+            <Image src={"/Logo.png"} className='rounded-xl object-contain w-full h-auto' width={500} height={400} alt="Oddi English" />
           </div>
           <div className="leading-tight">
-            <span className="font-display font-extrabold text-lg tracking-tight" style={{ color: 'var(--text-primary)' }}>
+            <span className="font-display font-extrabold md:text-lg tracking-tight" style={{ color: 'var(--text-primary)' }}>
               ODDI<span className="text-brand-500"> ENGLISH</span>
             </span>
             <span className="block text-[10px] font-medium tracking-widest uppercase" style={{ color: 'var(--text-muted)' }}>
@@ -47,7 +59,6 @@ export default function Navbar() {
           </div>
         </a>
 
-        {/* Desktop nav */}
         <div className="hidden lg:flex items-center gap-1">
           {navLinks.map((link) => (
             <a
@@ -61,12 +72,38 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Right side */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center md:gap-2 gap-1">
+          <div className="relative">
+            <button
+              onClick={() => setIsLangOpen(!isLangOpen)}
+              className="flex items-center gap-2 md:px-3 px-2 md:py-2 py-1.5 rounded-xl border border-white/10 hover:bg-white/5 transition-colors text-sm font-medium"
+            >
+              <Globe className="hidden md:block w-4 h-4 text-brand-500" />
+              <span className="uppercase">{currentLang.code}</span>
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {isLangOpen && (
+              <div className="absolute right-0 mt-2 w-40 rounded-2xl bg-[var(--bg-secondary,#111)] border border-white/10 shadow-2xl  z-50">
+                {LANGUAGES.map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => handleLangChange(lang)}
+                    className={`w-full flex items-center gap-3 px-4 py-2 text-xs font-medium transition-colors hover:bg-brand-500/10 ${currentLang.code === lang.code ? 'text-brand-500 font-bold bg-brand-500/5' : ''
+                      }`}
+                  >
+                    <span>{lang.flag}</span>
+                    <span>{lang.label}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
           <button
             onClick={toggleTheme}
             aria-label="Toggle theme"
-            className="w-10 h-10 rounded-lg flex items-center justify-center transition-colors hover:bg-[var(--bg-tertiary)]"
+            className="md:w-10 w-8 md:h-10 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-[var(--bg-tertiary)]"
             style={{ color: 'var(--text-secondary)' }}
           >
             {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -78,7 +115,7 @@ export default function Navbar() {
 
           <button
             onClick={() => setMobileOpen((v) => !v)}
-            className="lg:hidden w-10 h-10 rounded-lg flex items-center justify-center"
+            className="lg:hidden w-5 h-5 rounded-lg flex items-center justify-center"
             style={{ color: 'var(--text-primary)' }}
             aria-label="Menu"
           >
@@ -87,7 +124,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {mobileOpen && (
         <div className="lg:hidden glass-nav mt-2 mx-4 rounded-2xl p-4 animate-fade-in">
           <div className="flex flex-col gap-1">
@@ -112,6 +148,6 @@ export default function Navbar() {
           </div>
         </div>
       )}
-    </nav>
+    </nav >
   )
 }

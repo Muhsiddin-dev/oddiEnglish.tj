@@ -87,12 +87,12 @@ export default function AdminLogin() {
 
       <div className="flex-1 flex items-center justify-center p-8 lg:p-10">
         <div className="w-full max-w-sm ">
-          <div className="lg:hidden flex items-center justify-center gap-2.5 mb-8">
+          <a href="/" className="lg:hidden flex items-center justify-center gap-2.5 mb-8">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center">
               <Image src={"/Logo.png"} className='rounded-xl object-contain w-full h-auto' width={500} height={400} alt="Oddi English" />
             </div>
             <span className="font-display font-extrabold text-lg">ODDI ENGLISH</span>
-          </div>
+          </a>
 
           <h3 className="font-display text-center md:text-start font-bold text-2xl mb-2">Хуш омадед</h3>
           <p className="text-sm mb-8 text-center md:text-start" style={{ color: 'var(--text-secondary)' }}>
