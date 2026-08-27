@@ -1,0 +1,60 @@
+{
+  "Navbar": {
+    "home": "HOME",
+    "about": "MENTOR",
+    "how": "HOW IT WORKS",
+    "curriculum": "COURSE",
+    "reviews": "REVIEWS",
+    "faq": "FAQ",
+    "start": "Get Started"
+  },
+  "Hero": {
+    "badge": "English Courses with Nazar Nazarov",
+    "titleLine1": "Learn English",
+    "titleHighlight": "practically",
+    "titleLine2": ",",
+    "titleLine3": "not just theoretically",
+    "description": "A modern education system guiding you from beginner to fluent speaking. 10+ years of experience, 500+ students, and real results.",
+    "startBtn": "Get Started",
+    "reviewsBtn": "Watch Reviews",
+    "experience": "10+ years experience",
+    "students": "500+ students",
+    "satisfaction": "98% satisfaction",
+    "instructorName": "Nazar Nazarov",
+    "instructorRole": "Mentor & English Teacher",
+    "currentLevelLabel": "Target Level",
+    "lessonsPerMonthLabel": "Lessons / Month",
+    "lessonsCount": "12 lessons",
+    "formatLabel": "Format",
+    "formatValue": "Online / Zoom",
+    "ratingCount": "From 200+ student reviews"
+  },
+  "AboutMentor": {
+    "badge": "ABOUT THE MENTOR",
+    "titlePrefix": "Your mentor for ",
+    "titleGradient": "success",
+    "description": "I'm Nazar Nazarov — an English teacher with 10+ years of experience. During this time, I've taught over 500 students, many of whom are now working abroad or scored high on international exams. I believe English shouldn't be hard — it should be engaging and practical.",
+    "videoError": "Your browser does not support the video tag.",
+    "stats": {
+      "exp": "Years Experience",
+      "students": "Students Taught",
+      "courses": "Course Programs",
+      "satisfaction": "Success Rate"
+    }
+  },
+  "Footer": {
+    "description": "Premium English courses with Nazar Nazarov. 10+ years of experience, 500+ students, real results.",
+    "pagesHeader": "Pages",
+    "contactsHeader": "Contact",
+    "location": "Dushanbe, Tajikistan",
+    "copyright": "© 2024 ODDI ENGLISH. All rights reserved.",
+    "links": {
+      "hero": "Home",
+      "about": "About Mentor",
+      "how": "How It Works",
+      "curriculum": "Curriculum",
+      "reviews": "Reviews",
+      "faq": "FAQ"
+    }
+  }
+}

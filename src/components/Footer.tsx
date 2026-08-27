@@ -1,0 +1,102 @@
+"use client"
+import { Mail, Phone, MapPin, Shield, Send } from 'lucide-react'
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+
+export default function Footer() {
+  const router = useRouter()
+  const t = useTranslations('Footer')
+
+  const navLinks = [
+    { label: t('links.hero'), href: '#hero' },
+    { label: t('links.about'), href: '#about' },
+    { label: t('links.how'), href: '#how' },
+    { label: t('links.curriculum'), href: '#curriculum' },
+    { label: t('links.reviews'), href: '#reviews' },
+    { label: t('links.faq'), href: '#faq' },
+  ]
+
+  return (
+    <footer className="relative overflow-hidden border-t" style={{ borderColor: 'var(--border-color)', background: 'var(--bg-secondary)' }}>
+      <div className="glow-orb w-[300px] h-[300px] bg-brand-500/10 -bottom-10 left-1/2 -translate-x-1/2" />
+
+      <div className="max-w-7xl mx-auto container-px relative z-10 py-16">
+        <div className="grid md:grid-cols-3 gap-10 mb-12">
+          <div>
+            <div className="flex items-center gap-2.5 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center shadow-brand-500/30">
+                <Image src={"/Logo.png"} className='rounded-xl object-contain w-full h-auto' width={500} height={400} alt="Oddi English" />
+              </div>
+              <span className="font-display font-extrabold text-lg">
+                ODDI<span className="text-brand-500"> ENGLISH</span>
+              </span>
+            </div>
+            <p className="text-sm leading-relaxed max-w-xs" style={{ color: 'var(--text-secondary)' }}>
+              {t('description')}
+            </p>
+          </div>
+
+          {/* Links */}
+          <div>
+            <h4 className="font-display font-bold text-sm uppercase tracking-wider mb-4" style={{ color: 'var(--text-muted)' }}>
+              {t('pagesHeader')}
+            </h4>
+            <ul className="space-y-2">
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className="text-sm hover:text-brand-500 transition-colors"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h4 className="font-display font-bold text-sm uppercase tracking-wider mb-4" style={{ color: 'var(--text-muted)' }}>
+              {t('contactsHeader')}
+            </h4>
+            <ul className="space-y-3">
+              <a href="https://t.me/lll_nazarov_lll" className="flex items-center gap-2.5 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                <Send className="w-4 h-4 text-brand-500" />
+                @nazarov.eng
+              </a>
+              <li className="flex items-center gap-2.5 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                <Phone className="w-4 h-4 text-brand-500" />
+                +992 937010550
+              </li>
+              <li className="flex items-center gap-2.5 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                <MapPin className="w-4 h-4 text-brand-500" />
+                {t('location')}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="pt-8 border-t flex flex-col sm:flex-row items-center justify-between gap-4" style={{ borderColor: 'var(--border-color)' }}>
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+            {t('copyright')}
+          </p>
+
+          {/* Discreet Admin button */}
+          <button
+            onClick={() => router.push('/admin')}
+            className="group flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all hover:bg-brand-500/10"
+            style={{ color: 'var(--text-muted)' }}
+            aria-label="Admin panel"
+          >
+            <Shield className="w-3.5 h-3.5 group-hover:text-brand-500 transition-colors" />
+            <span className="group-hover:text-brand-500 transition-colors">Admin</span>
+          </button>
+        </div>
+      </div>
+    </footer>
+  )
+}

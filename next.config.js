@@ -1,3 +1,8 @@
+const createNextIntlPlugin = require('next-intl/plugin');
+
+// Агар файли i18n.ts дар папкаи src/ бошад './src/i18n.ts' нависед
+const withNextIntl = createNextIntlPlugin('./src/i18n.ts');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
@@ -6,4 +11,4 @@ const nextConfig = {
   images: { unoptimized: true },
 };
 
-module.exports = nextConfig;
+module.exports = withNextIntl(nextConfig);
